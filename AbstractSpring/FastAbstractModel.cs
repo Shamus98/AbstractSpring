@@ -30,7 +30,7 @@ namespace AbstractModel
         protected SortedList<double, FastAbstractEvent> eventList = new SortedList<double, FastAbstractEvent>();
         protected Dictionary<string, double> objectsEventTime = new Dictionary<string, double>();
         public double updatedTime;
-        private HashSet<string> objectsKeyForUpdate;
+        private HashSet<string> objectsKeyForUpdate = new HashSet<string>();
 
         protected Action<string> writeDebug = Console.WriteLine;
         public Action<string> writeError = Console.WriteLine;

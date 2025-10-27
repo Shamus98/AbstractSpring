@@ -38,13 +38,17 @@ namespace SpringForce
             birdLeft.springRightID = this.uid;
             birdRight.springLeftID = this.uid;
 
+            z = birdRight.x - birdLeft.x;
+            zv = birdRight.v - birdLeft.v;
         }
 
         public override (double, FastAbstractEvent) getNearestEvent()
         {
 
 
-            List<double> time = SquareSentenceTime();
+            List<double> time = SquareSentenceTime(changeLengthSpring);
+            List<double> time1 = SquareSentenceTime(-changeLengthSpring);
+            time.AddRange(time1);
 
             if (time.Count > 0)
             {
@@ -57,83 +61,46 @@ namespace SpringForce
                 return (double.MaxValue, null);
             }
 
-
+    
 
 
 
 
         }
 
-        public List<double> SquareSentenceTime()
+        public List<double> SquareSentenceTime(double dl)
         {
-            double discriminant_one = zv * zv - 2 * za * z + 2 * za * (lengthSpring - changeLengthSpring);
-            double discriminant_two = zv * zv - 2 * za * z + 2 * za * (lengthSpring + changeLengthSpring);
-
             List<double> time = new List<double>();
+            double a = za / 2.0;
+            double b = zv;
+            double c = z - (lengthSpring + dl);
+            double discriminant = b * b - 4 * a * c;
+            if (a != 0)
+            {
+                if (discriminant > 0)
+                {
+                    // Два различных корня
+                    double t1 = (-b + Math.Sqrt(discriminant)) / (2 * a);
+                    double t2 = (-b - Math.Sqrt(discriminant)) / (2 * a);
+                    // Только положительные решения
+                    if (t1 > 0) time.Add(t1);
+                    if (t2 > 0) time.Add(t2);
 
-            // Случай 1: Применяем первое уравнение (discriminant_one)
-            if (discriminant_one > 0)
-            {
-                // Два различных корня
-                if (za != 0)
-                {
-                    if (zv != 0)
-                    {
-                        double t1 = (-zv + Math.Sqrt(discriminant_one)) / za;
-                        double t2 = (-zv - Math.Sqrt(discriminant_one)) / za;
-                        // Только положительные решения
-                        if (t1 > 0) time.Add(t1);
-                        if (t2 > 0) time.Add(t2);
-                    }
-                    else
-                    {
-                        // Если начальная скорость равна 0
-                        double t1 = Math.Sqrt(2 * ((lengthSpring - changeLengthSpring) - z) / za);
-                        if (t1 > 0) time.Add(t1);
-                    }
                 }
-            }
-            else if (discriminant_one == 0)
-            {
-                // Один корень
-                if (za != 0)
+                else if (discriminant == 0)
                 {
-                    double t = -zv / za; // Решение при дискриминанте равном 0
+                    double t = -b / (2 * a); // Решение при дискриминанте равном 0
                     if (t > 0) time.Add(t);
                 }
             }
-
-            // Случай 2: Применяем второе уравнение (discriminant_two)
-            if (discriminant_two > 0)
-            {
-                // Два различных корня
-                if (za != 0)
+            else {
+                if (b != 0)
                 {
-                    if (zv != 0)
-                    {
-                        double t1 = (-zv + Math.Sqrt(discriminant_two)) / za;
-                        double t2 = (-zv - Math.Sqrt(discriminant_two)) / za;
-                        // Только положительные решения
-                        if (t1 > 0) time.Add(t1);
-                        if (t2 > 0) time.Add(t2);
-                    }
-                    else
-                    {
-                        double t1 = Math.Sqrt(2 * ((lengthSpring + changeLengthSpring) - z) / za);
-                        if (t1 > 0) time.Add(t1);
-                    }
-                }
-            }
-            else if (discriminant_two == 0)
-            {
-                // Один корень
-                if (za != 0)
-                {
-                    double t = -zv / za; // Решение при дискриминанте равном 0
+                    double t = -c / b;
                     if (t > 0) time.Add(t);
                 }
             }
-
+            
             return time;
         }
 
@@ -171,27 +138,29 @@ namespace SpringForce
 
             double forceLeft = 0;
 
-            var springLeft = (Spring)springWrapper.getObject(birdLeft.springLeftID);
-            var springRight = (Spring)springWrapper.getObject (birdRight.springRightID);
+            Spring springLeft;
+            Spring springRight;
 
-            if (springLeft != null)
+            if (birdLeft.springLeftID != null)
             {
+                springLeft = (Spring)springWrapper.getObject(birdLeft.springLeftID);
                 forceLeft = springLeft.getForce();
             }
 
             double currentForce = this.getForce();
 
-            double aLeft = (forceLeft - currentForce) / birdLeft.m;
+            double aLeft = (currentForce - forceLeft) / birdLeft.m;
 
             double forceRight = 0;
 
-            if (springRight != null)
+            if (birdRight.springRightID != null)
             {
+                springRight = (Spring)springWrapper.getObject(birdRight.springRightID);
                 forceRight = springRight.getForce();
             }
 
-            double aRight = (currentForce - forceRight) / birdRight.m;
-            double za = aRight - aLeft;
+            double aRight = (forceRight - currentForce) / birdRight.m;
+            za = aRight -  aLeft;
 
             birdLeft.SetupAcceleration(aLeft);
             birdRight.SetupAcceleration(aRight); 

@@ -1,0 +1,4 @@
+ID	Bird_ID1	Bird_ID2	C	Delta_C	F
+p1	C1	C2	1	0,1	0,3
+p2	C2	C3	1	0,1	0,3
+p3	C3	C4	1	0,1	0,3
