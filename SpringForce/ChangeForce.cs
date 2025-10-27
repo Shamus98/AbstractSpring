@@ -4,30 +4,19 @@ namespace SpringForce
 {
     public class ChangeForce : FastAbstractEvent
     {
-        string ID;
-        double x;
-        double v;
-        double m;
-        string ID1;
-        string ID2;
-        double l;
-        double dl;
-        double f;
-        public ChangeForce(string ID, double x, double v, double m, string ID1, string ID2, double l, double dl, double f) 
+        SpringWrapper springWrapper;
+        
+        public ChangeForce(string ID, SpringWrapper SpringWrapper) 
         { 
             this.objId = ID;
-            this.x = x;
-            this.v = v;
-            this.m = m;
-            this.ID1 = ID1;
-            this.ID2 = ID2;
-            this.l = l;
-            this.dl = dl;
-            this.f = f;
+            this.springWrapper = SpringWrapper;
         }
         public override void runEvent(FastAbstractWrapper wrapper, double timeSpan)
         {
-            throw new NotImplementedException();
+            var spring = (Spring) springWrapper.getObject(objId);
+            var birdLeft = (Bird)springWrapper.getObject(spring.Bird_ID1);
+            var birdRight = (Bird)springWrapper.getObject(spring.Bird_ID2);
+            spring.SetupAcceleration();
         }
     }
 }
