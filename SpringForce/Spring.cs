@@ -55,7 +55,7 @@ namespace SpringForce
 
                 double time_nearest = time.Min();
              
-                return (time_nearest, new ChangeForce(uid, springWrapper));
+                return (time_nearest + lastUpdated, new ChangeForce(uid, springWrapper));
             } else
             {
                 return (double.MaxValue, null);

@@ -43,7 +43,10 @@ namespace SpringForce
             x = x + v * deltaT + a / 2 * deltaT * deltaT;
             v = v + a * deltaT;
 
+
+
             lastUpdated = timeSpan;
+            Console.WriteLine($"{uid}: {x} {v} {a} {lastUpdated}");
         }
 
         internal void SetupAcceleration(double a)

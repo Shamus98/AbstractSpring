@@ -9,31 +9,16 @@ namespace SpringForceRunner
     {
         static void Main(string[] args)
         {
-            var skvorecList = ReadSkvorecList("C:\\Users\\shami\\source\\repos\\AbstractSpring\\skvorecList.txt");
-            var springList = ReadSpringList("C:\\Users\\shami\\source\\repos\\AbstractSpring\\springList.txt");
+            var skvorecList = ReadSkvorecList("skvorecList.txt");
+            var springList = ReadSpringList("springList.txt");
 
             // Создание экземпляра SpringWrapper
             var springWrapper = new SpringWrapper(skvorecList, springList);
-            for (int i = 0; i < skvorecList.Count; i++)
-            {
-                Console.WriteLine(skvorecList[i].ID);
-                Console.WriteLine(skvorecList[i].x);
-                Console.WriteLine(skvorecList[i].v);
-                Console.WriteLine(skvorecList[i].m);
-            }
-            Console.WriteLine("Пружина");
-            for (int i = 0; i < springList.Count; i++)
-            {
-                Console.WriteLine(springList[i].ID);
-                Console.WriteLine(springList[i].ID1);
-                Console.WriteLine(springList[i].ID2);
-                Console.WriteLine(springList[i].C);
-                Console.WriteLine(springList[i].Delta_C);
-                Console.WriteLine(springList[i].F);
-            }
+
+            springWrapper.isDebug = true;
             while (springWrapper.Next())
             {
-                // Логика обработки следующего шага
+                
             }
         }
 
